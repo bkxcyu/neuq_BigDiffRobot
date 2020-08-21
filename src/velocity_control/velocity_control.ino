@@ -100,22 +100,8 @@ void loop()
   {
     Serial.println("receive:");
     Serial.println(comdata);
-    if (comdata == "a") //  qianjin
-    {
-      digitalWrite(pls1,LOW);
-  digitalWrite(dir1,LOW);
-  digitalWrite(pls2,LOW);
-  digitalWrite(dir2,LOW);
-  digitalWrite(pls3,HIGH);
-  digitalWrite(dir3,HIGH);
-  digitalWrite(pls4,HIGH);
-  digitalWrite(dir4,HIGH);
-      freq1.play(Limit);
-      freq2.play(Limit);
-      freq3.play(Limit);
-      freq4.play(Limit);
-    }
-    if (comdata == "c") // hou
+
+    if (comdata == "f") // qian
     {
         digitalWrite(pls1,HIGH);
         digitalWrite(dir1,HIGH);
@@ -130,7 +116,22 @@ void loop()
       freq3.play(Limit);
       freq4.play(Limit);
     }
-    if (comdata == "d") // you
+    if (comdata == "b") //  hou
+    {
+      digitalWrite(pls1,LOW);
+  digitalWrite(dir1,LOW);
+  digitalWrite(pls2,LOW);
+  digitalWrite(dir2,LOW);
+  digitalWrite(pls3,HIGH);
+  digitalWrite(dir3,HIGH);
+  digitalWrite(pls4,HIGH);
+  digitalWrite(dir4,HIGH);
+      freq1.play(Limit);
+      freq2.play(Limit);
+      freq3.play(Limit);
+      freq4.play(Limit);
+    }
+    if (comdata == "r") // you
     {
         digitalWrite(pls1,LOW);
         digitalWrite(dir1,LOW);
@@ -145,7 +146,7 @@ void loop()
       freq3.play(5000);
       freq4.play(5000);
     }
-    if (comdata == "b") //zuo
+    if (comdata == "l") //zuo
     {
         digitalWrite(pls1,HIGH);
         digitalWrite(dir1,HIGH);
@@ -160,7 +161,7 @@ void loop()
       freq3.play(5000);
       freq4.play(5000);
     }
-    if (comdata == "j") //ting
+    if (comdata == "s") //ting
     {
       freq1.play(0);
       freq2.play(0);
