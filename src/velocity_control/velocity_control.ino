@@ -9,8 +9,9 @@
 #define pls4 8//右前,HIGH为前进
 #define dir4 9
 #define startV 0
-#define Limit 12000
+#define Limit 18000
 #define MID 520
+#define soft_pram 500
 Tone freq1;
 Tone freq2;
 Tone freq3;
@@ -21,6 +22,10 @@ static int f3=startV;
 static int f4=startV;
 String comdata="";
 String stopcom="";
+
+int start_flag=0;
+int stop_flag=0;
+
 void setup()
 {  
   Serial.begin(115200);
@@ -46,6 +51,33 @@ void setup()
   digitalWrite(pls4,HIGH);
   digitalWrite(dir4,HIGH);
 }
+void soft_start(int freq)
+{
+  int step_=freq/soft_pram;
+  for(int i=0;i<soft_pram;i++)
+  {
+      freq1.play(step_*i);
+      freq2.play(step_*i);
+      freq3.play(step_*i);
+      freq4.play(step_*i);
+//      Serial.println(step_*i);
+  }
+  start_flag=1;
+}
+void soft_stop()
+{
+  Serial.println("stop");
+  int step_=Limit/soft_pram;
+  for(int i=0;i<soft_pram;i++)
+  {
+      freq1.play(Limit-step_*i);
+      freq2.play(Limit-step_*i);
+      freq3.play(Limit-step_*i);
+      freq4.play(Limit-step_*i);
+//      Serial.println(step_*i);
+  }
+  stop_flag=1;  
+}
 double pid(double measured)
 {
     double Kp=18;
@@ -62,20 +94,7 @@ double pid(double measured)
     return result;
 }
 void loop() 
-{
-//        digitalWrite(pls1,LOW);
-//  digitalWrite(dir1,LOW);
-//  digitalWrite(pls2,LOW);
-//  digitalWrite(dir2,LOW);
-//  digitalWrite(pls3,HIGH);
-//  digitalWrite(dir3,HIGH);
-//  digitalWrite(pls4,HIGH);
-//  digitalWrite(dir4,HIGH);
-//      freq1.play(20000);
-//      freq2.play(20000);
-//      freq3.play(20000);
-//      freq4.play(20000);
-      
+{    
   static int mid=MID;
   static int pid_r=0;
   while (Serial.available()>0)
@@ -83,19 +102,6 @@ void loop()
     comdata+=char(Serial.read());
     delay(2);
   }
-//  if(comdata.length()>0)
-//  {
-//    Serial.println(comdata);
-//    mid=comdata.toInt();
-//    Serial.write("mid:");
-//    Serial.print(mid);
-//    comdata="";
-//  }
-//  while (Serial1.available()>0)
-//  {
-//    stopcom+=char(Serial1.read());
-//    delay(2);
-//  }
   if(comdata.length()>0)
   {
     Serial.println("receive:");
@@ -103,73 +109,94 @@ void loop()
 
     if (comdata == "f") // qian
     {
-        digitalWrite(pls1,HIGH);
-        digitalWrite(dir1,HIGH);
-        digitalWrite(pls2,HIGH);
-        digitalWrite(dir2,HIGH);
-        digitalWrite(pls3,LOW);
-        digitalWrite(dir3,LOW);
-        digitalWrite(pls4,LOW);
-        digitalWrite(dir4,LOW);
-      freq1.play(Limit);
-      freq2.play(Limit);
-      freq3.play(Limit);
-      freq4.play(Limit);
+      digitalWrite(pls1,HIGH);
+      digitalWrite(dir1,HIGH);
+      digitalWrite(pls2,HIGH);
+      digitalWrite(dir2,HIGH);
+      digitalWrite(pls3,LOW);
+      digitalWrite(dir3,LOW);
+      digitalWrite(pls4,LOW);
+      digitalWrite(dir4,LOW);
+      if(!start_flag)
+        soft_start(Limit);
+      else
+       {  
+        freq1.play(Limit);
+        freq2.play(Limit);
+        freq3.play(Limit);
+        freq4.play(Limit);
+       }
+       stop_flag=0;
     }
     if (comdata == "b") //  hou
     {
       digitalWrite(pls1,LOW);
-  digitalWrite(dir1,LOW);
-  digitalWrite(pls2,LOW);
-  digitalWrite(dir2,LOW);
-  digitalWrite(pls3,HIGH);
-  digitalWrite(dir3,HIGH);
-  digitalWrite(pls4,HIGH);
-  digitalWrite(dir4,HIGH);
+      digitalWrite(dir1,LOW);
+      digitalWrite(pls2,LOW);
+      digitalWrite(dir2,LOW);
+      digitalWrite(pls3,HIGH);
+      digitalWrite(dir3,HIGH);
+      digitalWrite(pls4,HIGH);
+      digitalWrite(dir4,HIGH);
       freq1.play(Limit);
       freq2.play(Limit);
       freq3.play(Limit);
       freq4.play(Limit);
+      stop_flag=0;
     }
     if (comdata == "r") // you
     {
-        digitalWrite(pls1,LOW);
-        digitalWrite(dir1,LOW);
-        digitalWrite(pls2,LOW);
-        digitalWrite(dir2,LOW);
-        digitalWrite(pls3,LOW);
-        digitalWrite(dir3,LOW);
-        digitalWrite(pls4,LOW);  
-        digitalWrite(dir4,LOW);
-      freq1.play(5000);
-      freq2.play(5000);
-      freq3.play(5000);
-      freq4.play(5000);
+      digitalWrite(pls1,LOW);
+      digitalWrite(dir1,LOW);
+      digitalWrite(pls2,LOW);
+      digitalWrite(dir2,LOW);
+      digitalWrite(pls3,LOW);
+      digitalWrite(dir3,LOW);
+      digitalWrite(pls4,LOW);  
+      digitalWrite(dir4,LOW);
+      freq1.play(8000);
+      freq2.play(8000);
+      freq3.play(8000);
+      freq4.play(8000);
+      stop_flag=0;
     }
     if (comdata == "l") //zuo
     {
-        digitalWrite(pls1,HIGH);
-        digitalWrite(dir1,HIGH);
-        digitalWrite(pls2,HIGH);
-        digitalWrite(dir2,HIGH);
-        digitalWrite(pls3,HIGH);
-        digitalWrite(dir3,HIGH);
-        digitalWrite(pls4,HIGH);
-        digitalWrite(dir4,HIGH);
-      freq1.play(5000);
-      freq2.play(5000);
-      freq3.play(5000);
-      freq4.play(5000);
+      digitalWrite(pls1,HIGH);
+      digitalWrite(dir1,HIGH);
+      digitalWrite(pls2,HIGH);
+      digitalWrite(dir2,HIGH);
+      digitalWrite(pls3,HIGH);
+      digitalWrite(dir3,HIGH);
+      digitalWrite(pls4,HIGH);
+      digitalWrite(dir4,HIGH);
+      freq1.play(8000);
+      freq2.play(8000);
+      freq3.play(8000);
+      freq4.play(8000);
+      stop_flag=0;
     }
     if (comdata == "s") //ting
     {
-      freq1.play(0);
-      freq2.play(0);
-      freq3.play(0);
-      freq4.play(0);
+      if(!stop_flag)
+        soft_stop();
+      else
+      {
+        freq1.play(0);
+        freq2.play(0);
+        freq3.play(0);
+        freq4.play(0);
+      }
+      start_flag=0;
+      stop_flag=1;
     }
-    
-    
     comdata="";
   }
+//  else
+//  {
+//    freq1.play(0);
+//    freq2.play(0);
+//    freq3.play(0);
+//    freq4.play(0);
+//  }
 }
