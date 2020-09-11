@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-#import roslib; roslib.load_manifest('teleop_twist_keyboard')
-#import rospy
-#from geometry_msgs.msg import Twist
+
 
 import sys, select, termios, tty
 import serial
@@ -109,10 +107,6 @@ if __name__=="__main__":
     baudRate = 115200  # 波特率
     ser = serial.Serial(serialPort, baudRate, timeout=0.5)
     print("参数设置：串口=%s ，波特率=%d" % (serialPort, baudRate))
-    #pub = rospy.Publisher('cmd_vel', Twist, queue_size = 1)
-    #rospy.init_node('teleop_twist_keyboard')
-    #speed = rospy.get_param("~speed", 0.5)
-    #turn = rospy.get_param("~turn", 1.0)
     speed = 0.5
     turn = 1.0 
     x = 0
@@ -168,19 +162,11 @@ if __name__=="__main__":
             else :
             	c='s'
             	ser.write(c.encode())
-            #twist = Twist()
-            #twist.linear.x = x*speed; twist.linear.y = y*speed; twist.linear.z = z*speed;
-            #twist.angular.x = 0; twist.angular.y = 0; twist.angular.z = th*turn
-            #pub.publish(twist)
-
+ 
     except Exception as e:
         print(e)
 
     finally:
-        #twist = Twist()
-        #twist.linear.x = 0; twist.linear.y = 0; twist.linear.z = 0
-        #twist.angular.x = 0; twist.angular.y = 0; twist.angular.z = 0
-        #pub.publish(twist)
 
         speed_x=0.0
         speed_y=0.0
